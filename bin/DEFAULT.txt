@@ -1,0 +1,10 @@
+//default way reading things in- 
+*NAME*	Zombie_Caller
+*MANACOST* 4
+*ATK*	4
+*HEALTH* 2
+*BATTLECRY* 1
+*DEATHRATTLE* 0
+*STARTOFTURN* 0
+*ENDOFTURN* 0
+*TAUNT* 0
