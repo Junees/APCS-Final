@@ -16,13 +16,22 @@ public class WTG
 	public static ArrayList<Card> deck1 = new ArrayList();
 	public static ArrayList<Card> hand0 = new ArrayList();
 	public static ArrayList<Card> hand1 = new ArrayList();
+	public static ArrayList<Card> discard0 = new ArrayList();
+	public static ArrayList<Card> discard1 = new ArrayList();
+	public static ArrayList<Card> exile0 = new ArrayList();
+	public static ArrayList<Card> exile1 = new ArrayList();
+
+	// exile cards
+	// discarding and re adding cards from discard
+	//
+
 	public static Scanner input = new Scanner(System.in);
 
 	public static Card findCommander(byte playerNum) {
 		for (int r = 0; r < sm.numRows(); r++) {
 			for (int c = 0; c < sm.numColumns(); c++) {
 				Card temp = sm.get(r, c);
-				if (temp instanceof Commander && temp.getPlayer() == playerNum)
+				if (temp != null && temp instanceof Commander && temp.getPlayer() == playerNum)
 					return temp;
 			}
 		}
@@ -68,15 +77,23 @@ public class WTG
 			drawCard((byte) 1);
 			drawCard((byte) 1);
 
+			// drawCardFromDiscard(byte playerNum, ArrayList<Card> discard)
+
 			System.out.println(hand0);
 			System.out.println(hand1);
 
 			c0 = findCommander((byte) 0);
 			c1 = findCommander((byte) 1);
 
-			playCard((byte) 0);
-			playCard((byte) 1);
+			//discard((byte) 0, hand0, discard0);
 
+			//drawCardFromDiscard((byte) 0, discard0);
+
+			playCard((byte) 0, hand0);
+			playCard((byte) 1, hand1);
+			dealDamage((byte) 3, (byte) 2, (byte) 5);
+			
+			
 			System.out.println("health of commander " + c0.getHealth());
 			System.out.println("health of commander " + c1.getHealth());
 
@@ -89,151 +106,148 @@ public class WTG
 		}
 	}
 
-	public static byte playCard(byte playerNum) {
+	public static byte playCard(byte playerNum, ArrayList<Card> hand) {
 
-		if (playerNum == 0) {
+		System.out.println("number card in hand");
 
-			int z = 0;
-			System.out.println("number card in hand");
+		for (int r = 0; r < hand.size(); r++) {
 
-			for (int r = 0; r < hand0.size(); r++) {
-
-				{
-					System.out.print(hand0.get(r) + " ");
-					System.out.print(z++ + " ");
-				}
-
+			{
+				System.out.print(hand.get(r) + " ");
+				System.out.print(r + " ");
 			}
 
-			System.out.println();
-
-			System.out.println("choose the card you want to play ");
-			int value2;
-			try {
-							
-				value2 = Integer.parseInt(input.nextLine());
-			} catch (Exception e) {
-				value2 = Integer.parseInt(input.nextLine());
-			}
-			if (value2 >= 0 && value2 < hand0.size()) {
-				Card card = hand0.get(value2);
-				hand0.remove(card);
-				System.out.println("x coord");
-				int xCoord = input.nextInt();
-				System.out.println("y coord");
-				int yCoord = input.nextInt();
-				System.out.println("(" + xCoord + "," + yCoord + ")");
-				while (canPlay((byte) xCoord, (byte) yCoord, (byte) 0) == false)
-				{
-					System.out.println("the selected input is bad");
-					showToScreen();
-
-					System.out.println("enter an x coord");
-					 xCoord = input.nextInt();
-					System.out.println("enter the y coord");
-					 yCoord = input.nextInt();
-				
-					 
-				}
-					
-					
-				
-						sm.add(xCoord, yCoord, card);
-						showToScreen();
-					
-
-				}
-			
-						
 		}
 
-		else {
+		System.out.println();
 
-			int po = 0;
-			System.out.println("number card in hand");
+		System.out.println("choose the card you want to play ");
+		byte value2 = (byte) (input.nextInt());
+		System.out.println("x coord");
+		byte xCoord = (byte) (input.nextInt());
+		System.out.println("y coord");
+		byte yCoord = (byte) (input.nextInt());
+		while (validInputToPlay(xCoord, yCoord, value2, hand, playerNum) == false) {
+			System.out.println("the selected input is bad");
 
-			for (int r = 0; r < hand1.size(); r++) {
+			for (int r = 0; r < hand.size(); r++) {
 
 				{
-					System.out.print(hand1.get(r) + " ");
-					System.out.print(po++ + " ");
+					System.out.print(hand.get(r) + " ");
+					System.out.print(r + " ");
 				}
 
 			}
 
-			System.out.println();
+			System.out.println("");
+			showToScreen();
 
 			System.out.println("choose the card you want to play ");
-			int value;
-			try {
-				value = Integer.parseInt(input.nextLine());
-			} catch (Exception e) {
-				value = Integer.parseInt(input.nextLine());
-			}
-			
-			if (value >= 0 && value < hand1.size()) {
-				Card card = hand0.get(value);
-				hand1.remove(card);
-				System.out.println("x coord");
-				int xCoord = input.nextInt();
-				System.out.println("y coord");
-				int yCoord = input.nextInt();
-				System.out.println("(" + xCoord + "," + yCoord + ")");
-				while (canPlay((byte) xCoord, (byte) yCoord, (byte) 0) == false)
-				{
-					System.out.println("the selected input is bad, cards must be adjacent to each other ");
-					showToScreen();
-
-					
-					System.out.println("enter an x coord");
-					 xCoord = input.nextInt();
-					System.out.println("enter the y coord");
-					 yCoord = input.nextInt();
-				
-			
-				}
-				
-					
-				
-						sm.add(xCoord, yCoord, card);
-						 System.out.println("(" + xCoord + "," + yCoord + ")");
-						showToScreen();
-					
-
-				}
-				
-
-					
-						
-
-					
-
-				
-			
-
+			value2 = (byte) (input.nextInt());
+			System.out.println("x coord");
+			xCoord = (byte) (input.nextInt());
+			System.out.println("y coord");
+			yCoord = (byte) (input.nextInt());
 		}
+
+		Card card = hand.get(value2);
+		hand.remove(card);
+
+		sm.add(xCoord, yCoord, card);
+		System.out.println("(" + xCoord + "," + yCoord + ")");
+		showToScreen();
+
 		return playerNum;
 	}
+
 	// pre: x and y are valid indices
 	// post: returns if the move can be made
+	// questions...
+	// done if pick card returns null it breaks,
+	// done printing out the coord for if it is broken or still works
+	// player can only play pieces adjacent to each other
+	// move method
+	// battle method
 
-	public static boolean canPlay(byte r, byte c, byte p) {
+	public static byte playCardFromDiscard(byte playerNum, ArrayList<Card> discard) {
 
-		for (int row = r - 1; row <= r + 1; row++)
-			for (int col = c - 1; col <= c + 1; col++) {
-				if (row == r && col == c)
-					continue;
-				Card temp = sm.get(row, col);
-				if (temp != null && temp.getPlayer() == p)
-					return true;
+		System.out.println("number card in discardPile");
+
+		for (int r = 0; r < discard.size(); r++) {
+
+			{
+				System.out.print(discard.get(r) + " ");
+				System.out.print(r + " ");
 			}
 
-		return false;
+		}
+
+		System.out.println();
+
+		System.out.println("choose the card you want to play from the discard pile ");
+		byte value2 = (byte) (input.nextInt());
+		System.out.println("x coord");
+		byte xCoord = (byte) (input.nextInt());
+		System.out.println("y coord");
+		byte yCoord = (byte) (input.nextInt());
+		while (validInputToPlay(xCoord, yCoord, value2, discard, playerNum) == false) {
+			System.out.println("the selected input is bad");
+
+			for (int r = 0; r < discard.size(); r++) {
+
+				{
+					System.out.print(discard.get(r) + " ");
+					System.out.print(r + " ");
+				}
+
+			}
+
+			System.out.println("");
+			showToScreen();
+
+			System.out.println("choose the card you want to play ");
+			value2 = (byte) (input.nextInt());
+			System.out.println("x coord");
+			xCoord = (byte) (input.nextInt());
+			System.out.println("y coord");
+			yCoord = (byte) (input.nextInt());
+		}
+
+		Card card = discard.get(value2);
+		discard.remove(card);
+
+		sm.add(xCoord, yCoord, card);
+		System.out.println("(" + xCoord + "," + yCoord + ")");
+		showToScreen();
+
+		return playerNum;
+	}
+
+	public static byte drawCardFromDiscard(byte playerNum, ArrayList<Card> discard) {
+		System.out.println("number card in discardPile");
+
+		for (int r = 0; r < discard.size(); r++) {
+
+			{
+				System.out.print(discard.get(r) + " ");
+				System.out.print(r + " ");
+			}
+
+		}
+
+		System.out.println();
+
+		System.out.println("choose the card you want to play from the discard pile ");
+		byte pickingCardFromDiscard = (byte) (input.nextInt());
+		Card card = discard.get(pickingCardFromDiscard);
+		discard.add(discard.remove(pickingCardFromDiscard));
+
+		return playerNum;
 	}
 
 	public static byte drawCard(byte pNum) {
 
-		if (pNum == 1) {
+		if (pNum == 0) {
 
 			hand0.add(deck0.remove(0));
 
@@ -249,10 +263,150 @@ public class WTG
 
 	}
 
+	public static byte discard(byte playerNum, ArrayList<Card> hand, ArrayList<Card> discard) {
+		System.out.println("cards in your hand");
+
+		for (int r = 0; r < hand.size(); r++) {
+
+			{
+				System.out.print(hand.get(r) + " ");
+				System.out.print(r + " ");
+			}
+
+		}
+
+		System.out.println();
+
+		System.out.println("choose the card you want to discard");
+		byte cardToDiscard = (byte) (input.nextInt());
+		Card card = hand.get(cardToDiscard);
+		discard.add(hand.remove(cardToDiscard));
+
+		return playerNum;
+	}
+
+	public static byte dealDamage(byte xCoord, byte yCoord, byte amtDamage) {
+
+		Card attacker = sm.get(xCoord, yCoord);
+		
+		System.out.println("choose a card on the field to target");
+
+		
+		
+		for (int r = 0; r < sm.numRows(); r++) {
+			for (int c = 0; c < sm.numColumns(); c++) {
+				if(r == xCoord && c == yCoord)
+					continue;
+				Card temp = sm.get(r, c);
+				if (temp != null)
+				{
+					
+				System.out.println(temp);
+									
+				}
+				
+				System.out.println("choose the card you want to deal damage to ");
+				byte value2 = (byte) (input.nextInt());
+				System.out.println("x coord");
+				byte xCoord2 = (byte) (input.nextInt());
+				System.out.println("y coord");
+				byte yCoord2 = (byte) (input.nextInt());
+				
+				Card victim sm.get(xCoord2, yCoord2);
+				
+				while (validInput(xCoord2, yCoord2, value2, hand, playerNum) == false) {
+					System.out.println("the selected input is bad");
+
+					for (int r = 0; r < hand.size(); r++) {
+
+						{
+							System.out.print(hand.get(r) + " ");
+							System.out.print(r + " ");
+						}
+
+					}
+
+					System.out.println("");
+					showToScreen();
+
+					System.out.println("choose the card you want to play ");
+					value2 = (byte) (input.nextInt());
+					System.out.println("x coord");
+					xCoord = (byte) (input.nextInt());
+					System.out.println("y coord");
+					yCoord = (byte) (input.nextInt());
+				}
+
+				Card card = hand.get(value2);
+				hand.remove(card);
+
+				sm.add(xCoord, yCoord, card);
+				System.out.println("(" + xCoord + "," + yCoord + ")");
+				showToScreen();
+
+				
+			}
+
+				
+			}
+
+			showToScreen();
+		}
+		return amtDamage;
+
+	}
+
 	public static void showToScreen() {
 
 		System.out.println(sm.toString());
 
 	}
 
+	public static boolean validInputToPlay(byte r, byte c, byte cardNum, ArrayList<Card> hand, byte playerNum) {
+		if (r < 0 || r >= sm.numRows() || c < 0 || c >= sm.numColumns()) {
+
+			return false;
+
+		}
+
+		if (cardNum < 0 || cardNum >= hand.size()) {
+			return false;
+		}
+
+		for (int row = r - 1; row <= r + 1; row++)
+			for (int col = c - 1; col <= c + 1; col++) {
+				if (row == r && col == c)
+					continue;
+				Card temp = sm.get(row, col);
+				if (temp != null && temp.getPlayer() == playerNum)
+					return true;
+
+			}
+		return false;
+
+	}
+	public static boolean validInputToAttack(byte r, byte c, byte cardNum, ArrayList<Card> hand, byte playerNum) {
+		if (r < 0 || r >= sm.numRows() || c < 0 || c >= sm.numColumns()) {
+
+			return false;
+
+		}
+
+		if (cardNum < 0 || cardNum >= hand.size()) {
+			return false;
+		}
+
+		for (int row = r - 1; row <= r + 1; row++)
+			for (int col = c - 1; col <= c + 1; col++) {
+				if (row == r && col == c)
+					continue;
+				Card temp = sm.get(row, col);
+				if (temp != null && temp.getPlayer() == playerNum)
+					return true;
+
+			}
+		return false;
+
+	}
+	
 }

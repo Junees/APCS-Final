@@ -8,6 +8,7 @@ public class sparseMatrix<anyType> implements Matrixable<anyType>
 
 {
 
+	
 	private ArrayList<Cell<anyType>> list;
 	private int numElements;
 	private int numRows, numCols;
@@ -120,9 +121,12 @@ public class sparseMatrix<anyType> implements Matrixable<anyType>
 
 	public String toString() {
 
-		String ans = "";
-
+		String ans = "  ";
+		for (int c = 0; c < numCols; c++)
+		    ans += c + " ";
+		ans += "\n";
 		for (int r = 0; r < numRows; r++) {
+			ans += r + " ";
 			for (int c = 0; c < numCols; c++) {
 				anyType val = this.get(r, c);
 				if (val != null)
