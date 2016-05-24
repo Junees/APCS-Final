@@ -85,15 +85,17 @@ public class WTG
 			c0 = findCommander((byte) 0);
 			c1 = findCommander((byte) 1);
 
-			//discard((byte) 0, hand0, discard0);
+			// discard((byte) 0, hand0, discard0);
 
-			//drawCardFromDiscard((byte) 0, discard0);
+			// drawCardFromDiscard((byte) 0, discard0);
 
 			playCard((byte) 0, hand0);
-			playCard((byte) 1, hand1);
-			dealDamage((byte) 3, (byte) 2, (byte) 5);
-			
-			
+			dealBattleDamage((byte) 3, (byte) 2);
+
+			// playCard((byte) 1, hand1);
+
+			// dealDamage((byte) 3, (byte) 2, (byte) 5);
+
 			System.out.println("health of commander " + c0.getHealth());
 			System.out.println("health of commander " + c1.getHealth());
 
@@ -109,6 +111,8 @@ public class WTG
 	public static byte playCard(byte playerNum, ArrayList<Card> hand) {
 
 		System.out.println("number card in hand");
+
+		showToScreen();
 
 		for (int r = 0; r < hand.size(); r++) {
 
@@ -285,76 +289,149 @@ public class WTG
 		return playerNum;
 	}
 
-	public static byte dealDamage(byte xCoord, byte yCoord, byte amtDamage) {
+	// dealsbattledamage
+	public static byte dealBattleDamage(byte xCoord, byte yCoord) {
 
 		Card attacker = sm.get(xCoord, yCoord);
-		
-		System.out.println("choose a card on the field to target");
+		ArrayList<Card> hand = null;
+		if (attacker.getPlayer() == 0) {
 
-		
-		
+			hand = hand0;
+
+		} else
+
+		{
+
+			hand = hand1;
+
+		}
+
+		System.out.println("these are all the cards on the field");
+		System.out.println("players cards on the field are signified by the number 0 for p1, 1 for p2");
+
 		for (int r = 0; r < sm.numRows(); r++) {
 			for (int c = 0; c < sm.numColumns(); c++) {
-				if(r == xCoord && c == yCoord)
-					continue;
 				Card temp = sm.get(r, c);
-				if (temp != null)
-				{
-					
-				System.out.println(temp);
-									
+				if (temp != null) {
+
+					System.out.print(temp);
+					System.out.print(" " + temp.getPlayer());
+
 				}
-				
-				System.out.println("choose the card you want to deal damage to ");
-				byte value2 = (byte) (input.nextInt());
-				System.out.println("x coord");
-				byte xCoord2 = (byte) (input.nextInt());
-				System.out.println("y coord");
-				byte yCoord2 = (byte) (input.nextInt());
-				
-				Card victim sm.get(xCoord2, yCoord2);
-				
-				while (validInput(xCoord2, yCoord2, value2, hand, playerNum) == false) {
-					System.out.println("the selected input is bad");
-
-					for (int r = 0; r < hand.size(); r++) {
-
-						{
-							System.out.print(hand.get(r) + " ");
-							System.out.print(r + " ");
-						}
-
-					}
-
-					System.out.println("");
-					showToScreen();
-
-					System.out.println("choose the card you want to play ");
-					value2 = (byte) (input.nextInt());
-					System.out.println("x coord");
-					xCoord = (byte) (input.nextInt());
-					System.out.println("y coord");
-					yCoord = (byte) (input.nextInt());
-				}
-
-				Card card = hand.get(value2);
-				hand.remove(card);
-
-				sm.add(xCoord, yCoord, card);
-				System.out.println("(" + xCoord + "," + yCoord + ")");
-				showToScreen();
-
-				
 			}
 
-				
-			}
-
-			showToScreen();
 		}
-		return amtDamage;
+		System.out.println();
+
+		System.out.println("choose the card you want to deal damage to..as an x and y coord ");
+		System.out.println("x coord");
+		byte xCoord2 = (byte) (input.nextInt());
+		System.out.println("y coord");
+		byte yCoord2 = (byte) (input.nextInt());
+
+		Card victim = sm.get(xCoord2, yCoord2);
+		String state = validInputToAttack(xCoord2, yCoord2, attacker.getPlayer());
+		while (!state.equals("ok")) {
+			if(xCoord == xCoord2 && yCoord == yCoord2)
+			{
+				
+				System.out.println("same position of card");
+				
+			}
+			System.out.println(state);
+			showToScreen();
+			
+			
+			
+			System.out.println("choose the card you want to deal damage to..as an x and y coord ");
+			System.out.println("x coord");
+			xCoord2 = (byte) (input.nextInt());
+			System.out.println("y coord");
+			yCoord2 = (byte) (input.nextInt());
+			state = validInputToAttack(xCoord2, yCoord2, attacker.getPlayer());
+
+		}
+
+		for (int r = 0; r < sm.numRows(); r++) {
+			for (int c = 0; c < sm.numColumns(); c++) {
+				Card temp = sm.get(r, c);
+				if (temp != null) {
+
+					System.out.print(temp);
+					System.out.print(" " + temp.getPlayer());
+
+				}
+			}
+
+		}
+
+		return xCoord;
 
 	}
+
+	// xCoord and yCoord is the location of the attacker
+	// inside geting input for who you are attacking and deal damage.
+
+	/*
+	 * public static byte dealDamage(byte xCoord, byte yCoord, byte amtDamage) {
+	 * 
+	 * Card attacker = sm.get(xCoord, yCoord); ArrayList<Card> hand = null; if
+	 * (attacker.getPlayer() == 0) {
+	 * 
+	 * hand = hand0;
+	 * 
+	 * } else
+	 * 
+	 * {
+	 * 
+	 * hand = hand1;
+	 * 
+	 * } System.out.println("choose a card on the field to target");
+	 * 
+	 * for (int r = 0; r < sm.numRows(); r++) { for (int c = 0; c <
+	 * sm.numColumns(); c++) { if (r == xCoord && c == yCoord) continue; Card
+	 * temp = sm.get(r, c); if (temp != null) {
+	 * 
+	 * System.out.println(temp);
+	 * 
+	 * } } System.out.println("choose the card you want to deal damage to ");
+	 * byte value2 = (byte) (input.nextInt()); System.out.println("x coord");
+	 * byte xCoord2 = (byte) (input.nextInt()); System.out.println("y coord");
+	 * byte yCoord2 = (byte) (input.nextInt());
+	 * 
+	 * Card victim = sm.get(xCoord2, yCoord2);
+	 * 
+	 * while (validInputToAttack(xCoord2, yCoord2, value2, attacker.getPlayer())
+	 * == false) { System.out.println("the selected input is bad");
+	 * 
+	 * for (int q = 0; q < hand.size(); q++) {
+	 * 
+	 * { System.out.print(hand.get(q) + " "); System.out.print(q + " "); }
+	 * 
+	 * }
+	 * 
+	 * System.out.println(""); showToScreen();
+	 * 
+	 * System.out.println("choose the card you want to play "); value2 = (byte)
+	 * (input.nextInt()); System.out.println("x coord"); xCoord = (byte)
+	 * (input.nextInt()); System.out.println("y coord"); yCoord = (byte)
+	 * (input.nextInt()); }
+	 * 
+	 * Card card = hand.get(value2); hand.remove(card);
+	 * 
+	 * sm.add(xCoord, yCoord, card); System.out.println("(" + xCoord + "," +
+	 * yCoord + ")"); victim.setHealth(Byte.parseByte("" + (victim.getHealth() -
+	 * amtDamage)));
+	 * 
+	 * showToScreen();
+	 * 
+	 * }
+	 * 
+	 * showToScreen();
+	 * 
+	 * return amtDamage; }
+	 * 
+	 */
 
 	public static void showToScreen() {
 
@@ -385,15 +462,15 @@ public class WTG
 		return false;
 
 	}
-	public static boolean validInputToAttack(byte r, byte c, byte cardNum, ArrayList<Card> hand, byte playerNum) {
+
+	// r and c is the victims position, cardNum is the index of the card you are
+	// playign from hand, player num is whos card is atking
+
+	public static String validInputToAttack(byte r, byte c, byte playerNum) {
 		if (r < 0 || r >= sm.numRows() || c < 0 || c >= sm.numColumns()) {
 
-			return false;
+			return "bad coordinates";
 
-		}
-
-		if (cardNum < 0 || cardNum >= hand.size()) {
-			return false;
 		}
 
 		for (int row = r - 1; row <= r + 1; row++)
@@ -401,12 +478,12 @@ public class WTG
 				if (row == r && col == c)
 					continue;
 				Card temp = sm.get(row, col);
-				if (temp != null && temp.getPlayer() == playerNum)
-					return true;
+				if (temp != null && temp.getPlayer() != playerNum)
+					return "ok";
 
 			}
-		return false;
+		return "not adjacent";
 
 	}
-	
+
 }
