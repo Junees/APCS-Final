@@ -20,7 +20,8 @@ public class WTG
 	public static ArrayList<Card> discard1 = new ArrayList();
 	public static ArrayList<Card> exile0 = new ArrayList();
 	public static ArrayList<Card> exile1 = new ArrayList();
-
+	public static int turnNum0 = 0;
+	public static int turnNum1 = 0;
 	// exile cards
 	// discarding and re adding cards from discard
 	//
@@ -40,11 +41,31 @@ public class WTG
 
 	public static void main(String[] vidyagame) throws IOException {
 
+			System.out.println(hand0);
+			System.out.println(hand1);
+			playGame();
+			
+			
+			
+			playCard((byte) 0, hand0);
+			playCard((byte) 1, hand1);
+
+			dealBattleDamage((byte) 3, (byte) 2);
+
+			
+			// drawCardFromDiscard(byte playerNum, ArrayList<Card> discard)
+			// discard((byte) 0, hand0, discard0);
+		    // drawCardFromDiscard((byte) 0, discard0);
+			// dealDamage((byte) 3, (byte) 2, (byte) 5);
+			
+
+		}
+	
+
+	public static void playGame() throws IOException
+	{
 		sm.add(2, 1, new Commander((byte) 0));
 		sm.add(2, 9, new Commander((byte) 1));
-
-		Card c0 = findCommander((byte) 0);
-		Card c1 = findCommander((byte) 1);
 
 		Scanner anime = new Scanner(new FileReader("cards.txt"));
 		while (anime.hasNextLine()) {
@@ -59,55 +80,94 @@ public class WTG
 			deck1.add(new Card(season2.nextLine()));
 		}
 		season2.close();
+		
+		//byte setPlayer = 0;
+		
+		//double d = Math.random();
+		//if (d < 0.5)
+		
+		drawCard((byte) 0);
+		drawCard((byte) 0);
+		drawCard((byte) 0);
 
-		/* while */
-		while (c0.getHealth() > 0 && c1.getHealth() > 0) {
-
-			showToScreen();
-
-			System.out.println(deck0);
-			System.out.println(deck1);
-
-			drawCard((byte) 0);
-			drawCard((byte) 0);
-			drawCard((byte) 0);
-
-			drawCard((byte) 1);
-			drawCard((byte) 1);
-			drawCard((byte) 1);
-			drawCard((byte) 1);
-
-			// drawCardFromDiscard(byte playerNum, ArrayList<Card> discard)
-
-			System.out.println(hand0);
-			System.out.println(hand1);
-
-			c0 = findCommander((byte) 0);
-			c1 = findCommander((byte) 1);
-
-			// discard((byte) 0, hand0, discard0);
-
-			// drawCardFromDiscard((byte) 0, discard0);
-
-			playCard((byte) 0, hand0);
-			dealBattleDamage((byte) 3, (byte) 2);
-
-			// playCard((byte) 1, hand1);
-
-			// dealDamage((byte) 3, (byte) 2, (byte) 5);
-
-			System.out.println("health of commander " + c0.getHealth());
-			System.out.println("health of commander " + c1.getHealth());
-
-			c0.setHealth((byte) -123);
-
-			// putting cards onto the board and adjacent to friendly cards
-			// taking cards from the array list and removing them from the hand
-			// traversing and printing from the new arrayList from the hand size
-
-		}
+		drawCard((byte) 1);
+		drawCard((byte) 1);
+		drawCard((byte) 1);
+		drawCard((byte) 1);
+		
+		
+		
+		makeTurn((byte) 0);
+		//makeTurn((byte) 1);
+		
+		
 	}
+	
+	public static void makeTurn(byte playerNum)
+	
+	{
+	
+		Card c0 = findCommander((byte) 0);
+		Card c1 = findCommander((byte) 1);
+		
+		while (c0.getHealth() > 0 && c1.getHealth() > 0) {	
+		
+		standbyPhase();
+		//mainPhase1();
+		//battlePhase();
+		//mainPhase2();
+		//endPhase();
+		
+		showToScreen();
 
+		System.out.println(deck0);
+		System.out.println(deck1);
+
+		
+		
+		}
+		
+	}
+	
+	public static void standbyPhase()
+	{
+		
+		Card c0 = findCommander((byte) 0);
+		Card c1 = findCommander((byte) 1);
+		
+		System.out.println("health of commander " + c0.getHealth());
+		System.out.println("health of commander " + c1.getHealth());
+		
+		c0.setHealth((byte)0);
+	}
+	
+	
+	//public static void mainPhase1(byte playerNum)
+	{
+		
+		drawCard((byte) 0);
+		
+		
+		
+		
+	}
+	//public static void battlePhase()
+	{
+		
+		
+	}
+	//public static void mainPhase2()
+	{
+		
+		
+	}
+	//public static void endPhase()
+	{
+		
+		
+	}
+	
+	
 	public static byte playCard(byte playerNum, ArrayList<Card> hand) {
 
 		System.out.println("number card in hand");
@@ -164,12 +224,6 @@ public class WTG
 		return playerNum;
 	}
 
-	// pre: x and y are valid indices
-	// post: returns if the move can be made
-	// questions...
-	// done if pick card returns null it breaks,
-	// done printing out the coord for if it is broken or still works
-	// player can only play pieces adjacent to each other
 	// move method
 	// battle method
 
@@ -329,8 +383,9 @@ public class WTG
 		System.out.println("y coord");
 		byte yCoord2 = (byte) (input.nextInt());
 
-		Card victim = sm.get(xCoord2, yCoord2);
+		Card defender = sm.get(xCoord2, yCoord2);
 		String state = validInputToAttack(xCoord2, yCoord2, attacker.getPlayer());
+		
 		while (!state.equals("ok")) {
 			if(xCoord == xCoord2 && yCoord == yCoord2)
 			{
@@ -363,10 +418,47 @@ public class WTG
 				}
 			}
 
+			byte atkAtk = attacker.getAtk();
+			byte atkHp = attacker.getHealth();
+			
+			byte defAtk = attacker.getAtk();
+			byte defHp = attacker.getHealth();
+			
+			
+			//the cards aren't dead
+			if(atkHp != 0 && defHp != 0)
+			{
+				
+				// atker: 2/5 defender: 2/7
+				//takes away the health equal to the atk of each card, then if it killed the card
+				//print the name of the card and remove it from the board
+				if(atkAtk > defHp)
+				{
+					defender.setHealth((byte) ((byte)defHp - (byte)atkAtk));
+					attacker.setHealth((byte) ((byte)atkHp - (byte)defAtk));
+						if(defHp == 0)
+						{
+							
+							System.out.println("health of attacker" + atkHp + attacker.getPlayer() + "health of defender" + defHp + defender.getPlayer());
+							
+						}
+							
+				}
+				
+				// atker: 3/2 def: 2/3
+				// if both cards have reverse stats they will both destroy the opposing cards and remove them from the field
+				if(atkAtk == defHp)
+					defender.setHealth((byte) 0);
+				
+			}
+
+			
+			
+			
 		}
-
+		
 		return xCoord;
-
+		
 	}
 
 	// xCoord and yCoord is the location of the attacker
@@ -477,9 +569,17 @@ public class WTG
 			for (int col = c - 1; col <= c + 1; col++) {
 				if (row == r && col == c)
 					continue;
+			}
+
+		for (int row = r - 1; row <= r + 1; row++)
+			for (int col = c - 1; col <= c + 1; col++) {
+				if (row == r && col == c)
+					return "too far away";
 				Card temp = sm.get(row, col);
 				if (temp != null && temp.getPlayer() != playerNum)
 					return "ok";
+				if (temp != null && temp.getPlayer() == playerNum)
+					return "same players card";
 
 			}
 		return "not adjacent";

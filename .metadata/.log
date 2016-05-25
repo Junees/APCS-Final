@@ -1,0 +1,32 @@
+!SESSION 2016-05-25 01:17:07.857 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_65
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product -keyring /Users/willsdavis/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.jee.product -keyring /Users/willsdavis/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.ui 1 1 2016-05-25 01:18:15.500
+!MESSAGE Workbench migration started
+
+!ENTRY org.eclipse.ui 1 1 2016-05-25 01:18:17.917
+!MESSAGE Workbench migration finished
+
+!ENTRY org.eclipse.core.net 1 0 2016-05-25 01:18:19.077
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY org.eclipse.oomph.setup.core 2 0 2016-05-25 01:18:25.254
+!MESSAGE java.nio.channels.OverlappingFileLockException
+!STACK 0
+java.nio.channels.OverlappingFileLockException
+	at sun.nio.ch.SharedFileLockTable.checkList(FileLockTable.java:255)
+	at sun.nio.ch.SharedFileLockTable.add(FileLockTable.java:152)
+	at sun.nio.ch.FileChannelImpl.tryLock(FileChannelImpl.java:1107)
+	at java.nio.channels.FileChannel.tryLock(FileChannel.java:1155)
+	at org.eclipse.oomph.base.util.BaseUtil.execute(BaseUtil.java:273)
+	at org.eclipse.oomph.setup.internal.core.SetupContext.associate(SetupContext.java:361)
+	at org.eclipse.oomph.setup.internal.core.SetupContext.createSelf(SetupContext.java:238)
+	at org.eclipse.oomph.setup.ui.SetupUIPlugin.performStartup(SetupUIPlugin.java:563)
+	at org.eclipse.oomph.setup.ui.SetupUIPlugin.access$3(SetupUIPlugin.java:346)
+	at org.eclipse.oomph.setup.ui.SetupUIPlugin$1$1.run(SetupUIPlugin.java:243)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)

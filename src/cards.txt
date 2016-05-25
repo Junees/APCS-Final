@@ -1,6 +1,7 @@
-potato,0,0,5,0,0,0,0,0
-potato,0,0,5,0,0,0,0,0
-potato,0,0,5,0,0,0,0,0
-potato,0,0,5,0,0,0,0,0
-potato,0,0,5,0,0,0,0,0
-potato,0,0,5,0,0,0,0,0
+
+cgariongrub,0,0,5,0,0,0,0,0
+stranglethorntiger,0,0,5,0,0,0,0,0
+cgariongrub,0,0,5,0,0,0,0,0
+stranglethorntiger,0,0,5,0,0,0,0,0
+cgariongrub,0,0,5,0,0,0,0,0
+stranglethorntiger,0,0,5,0,0,0,0,0
