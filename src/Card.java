@@ -31,21 +31,7 @@ public class Card {
    
    }
    
-   /*
-   public void doTrig(String trig)//execute given trigger if exists
-   {
-	   String[] trigger;
-	   
-         String effect=null;
-      for(String i:trigger)
-      {
-         if(i.split("_")[0].equals(trig))
-         {
-            effect=i;
-         }
-      }
-   
-   */
+  
    
    
    
